@@ -11,7 +11,7 @@ interface CodeProps {
 const Code: React.FC<CodeProps>  = ({children, className}) => {
     const language = className ? className.replace('lang-', '') : '';
     return (
-      <div className="relative">
+      <div className="relative w-full ">
         <button className="absolute top-0 right-0 flex items-center"><IoCopyOutline /> Copy</button>
         <span className="border-b-[1px] border-white w-full">
           {language}

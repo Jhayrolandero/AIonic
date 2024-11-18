@@ -6,36 +6,32 @@ import { CiLogout } from "react-icons/ci";
 
 const Sidebar = () => {
   return (
-    <nav className="max-w-[240px] text-white py-2 space-y-5 grid grid-rows-[auto_1fr_auto]">
+    <nav className="max-w-[200px] text-white py-2 pl-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
         <div className="flex gap-4 items-center justify-between">
         <div className="flex gap-2 items-center">
-            <IconContext.Provider value={{ color: "#0080ff", className: "size-8" }}>
-                <IoLogoIonic />
-            </IconContext.Provider>
-            <h4 className="text-[1.5rem] font-bold">AIonic</h4>
+                <IoLogoIonic 
+                className="text-[#0080ff] size-8"
+                />
+            <h4 className="font-bold">AIonic</h4>
         </div>
-        <IconContext.Provider value={{ color: "white", className: "size-7" }}>
-            <button><FiSidebar  /></button>
-        </IconContext.Provider>
+            <button><FiSidebar className="text-white size-5"/></button>
         </div>
         <div className="flex flex-col gap-4">
-            <div className="flex gap-2 border-b-2 border-white">
+            <div className="flex gap-2 border-b-2 border-white py-1">
                 <span>
-                <IconContext.Provider value={{ color: "white", className: "size-7" }}>
-                    <MdOutlineChat />
-                </IconContext.Provider>                
+                    <MdOutlineChat className="size-6 text-white"/>
                 </span>
-                <p >Chats</p>
+                <p className="text-[0.8rem]">Chats</p>
             </div>
             <div className="space-y-2">
-                <p className="text-[14px]">Yesterday</p>
-                <p className="max-w-fit overflow-hidden">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
-                <p className="max-w-fit overflow-hidden">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
+                <p className="text-[0.7rem]">Yesterday</p>
+                <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
+                <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
             </div>    
             <div className="space-y-2">
-                <p className="text-[14px]">Yesterday</p>
-                <p className="max-w-fit overflow-hidden">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
-                <p className="max-w-fit overflow-hidden">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
+                <p className="text-[0.7rem]">Last 30 days</p>
+                <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
+                <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
             </div>    
         </div>
         <button className="flex">

@@ -5,18 +5,26 @@ import Typewriter from '../Typewriter'
 import Code from '../Code'
 
 interface MessageProps {
-    message: string
-    entity: 'user' | 'bot'
+    message: string;
+    entity: 'user' | 'bot';
+    newMessage: boolean;
 }
 
-const MessageBox: React.FC<MessageProps> = ({message, entity}) => {
-
-    const Pre = ({children} : {children:string}) => (
-        <pre className="bg-[#2F2F2F]">
-            {children}
-        </pre>
-    )
+const MessageBox: React.FC<MessageProps> = ({message, newMessage, entity}) => {
+  
+  const Pre = ({children} : {children:string}) => (
+    <pre className="bg-[#2F2F2F] w-full border-[1px] border-gray-400">
+      {children}
+    </pre>
+  )
     
+  const H3 = ({children} : {children:string}) => (
+    <h3 className='text-white'>
+      {children}
+    </h3>
+  ) 
+  
+  
   return (
     <div className={`grid w-full ${entity === 'user' ? 'place-items-end grid-cols-[1fr_auto]' : 'grid-cols-[auto_1fr]'} gap-1`}>
     <span className={`bg-[#0080FF] p-[0.1em] rounded-lg max-h-max ${entity === 'user' ? 'order-2' : 'order-1'}`}>
@@ -31,12 +39,14 @@ const MessageBox: React.FC<MessageProps> = ({message, entity}) => {
         },
         pre : {
           component: Pre
+        },
+        h3: {
+          component: H3
         }
       }
     }}
     >
-      {message}
-      {/* {Typewriter({text: message, delay: 5})} */}
+      {!newMessage ? message : Typewriter({text: message, delay: 5}) }
     </Markdown>
     </div>
 

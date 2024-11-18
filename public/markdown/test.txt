@@ -1,6 +1,6 @@
 Certainly! Bogo Sort, also known as "stupid sort" or "random sort," is a highly inefficient sorting algorithm based on the generate and test paradigm. It works by randomly shuffling the elements of the array until it is sorted. Here's how you can implement Bogo Sort in Python:
 
-```python
+```sh
 import random
 
 def is_sorted(arr):
