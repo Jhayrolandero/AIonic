@@ -3,6 +3,7 @@ import React from 'react'
 import { IoLogoIonic } from 'react-icons/io5'
 import Typewriter from '../Typewriter'
 import Code from '../Code'
+import { Message } from '../../interface/iMessage'
 
 interface MessageProps {
     message: string;
@@ -10,7 +11,7 @@ interface MessageProps {
     newMessage: boolean;
 }
 
-const MessageBox: React.FC<MessageProps> = ({message, newMessage, entity}) => {
+const MessageBox: React.FC<Message> = ({message, newMessage, entity, created_date}) => {
   
   const Pre = ({children} : {children:string}) => (
     <pre className="bg-[#2F2F2F] w-full border-[1px] border-gray-400">
