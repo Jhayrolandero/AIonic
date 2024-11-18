@@ -1,0 +1,35 @@
+Certainly! Bogo Sort, also known as "stupid sort" or "random sort," is a highly inefficient sorting algorithm based on the generate and test paradigm. It works by randomly shuffling the elements of the array until it is sorted. Here's how you can implement Bogo Sort in Python:
+
+```python
+import random
+
+def is_sorted(arr):
+    """Check if the array is sorted."""
+    for i in range(len(arr) - 1):
+        if arr[i] > arr[i + 1]:
+            return False
+    return True
+
+def bogo_sort(arr):
+    """Sort the array using Bogo Sort."""
+    attempts = 0
+    while not is_sorted(arr):
+        random.shuffle(arr)
+        attempts += 1
+    print(f"Sorted in {attempts} attempts.")
+    return arr
+
+# Example usage:
+arr = [3, 2, 5, 1, 4]
+sorted_arr = bogo_sort(arr)
+print("Sorted array:", sorted_arr)
+```
+
+### Explanation:
+1. *is_sorted(arr)*: This helper function checks if the array is sorted in ascending order.
+2. *bogo_sort(arr)*: This function repeatedly shuffles the array until it is sorted. It uses the `random.shuffle()` function to randomly shuffle the elements of the array.
+3. *attempts*: This variable keeps track of how many times the array was shuffled before it was sorted.
+
+### Note:
+- Bogo Sort is not practical for large datasets because its average and worst-case time complexity is O((n+1)!) where n is the number of elements in the array.
+- It is mainly used for educational purposes to demonstrate the inefficiency of random approaches to sorting.
