@@ -5,10 +5,15 @@ import { fetchMessage, sendMessage } from "../../services/MessageService";
 import LoadThinking from "../LoadThinking";
 import MessageBox from "../message/MessageBox";
 
-const Chat = () => {
+
+// TODO: fetch the chat history by user
+const Chat = ({userID} : {userID: string}) => {
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [posts, setPosts] = useState<Message[]>([]);
+  // const [userIDState, setUserID] = useState('')
+  // const [chatID, setChatID] = useState('')
+
   const [suspendBtn, setSuspendBtn] = useState(false)
 
   const handleInput = async () => {

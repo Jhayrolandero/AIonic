@@ -83,7 +83,7 @@ const AccountMenu: React.FC<User> = ({...user}) => {
         </MenuItem>
         <MenuItem 
         className='text-[12px]'
-        onClick={() => {signUserOut(); navigate('/login')}}>
+        onClick={() => {signUserOut()}}>
           <Avatar /> 
           <p
           className='text-[12px]'

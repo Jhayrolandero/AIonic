@@ -1,33 +1,32 @@
+import { useEffect, useState } from "react";
 import { FiSidebar } from "react-icons/fi";
 import { IoLogoIonic } from "react-icons/io5";
 import { MdOutlineChat } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-import { signUserOut } from "../../services/AuthService";
-import AccountMenu from "../ui/AccountMenu";
-import { useEffect, useState } from "react";
 import { auth } from "../../config/firebaseConfig";
 import { User } from "../../interface/iUser";
-const Sidebar = () => {
-    const navigate = useNavigate()
-    const [userState, setUserState] = useState<User>()
+import AccountMenu from "../ui/AccountMenu";
 
-    useEffect(() => {
+// TODO: fix the account logic
+const Sidebar = ({userState} : {userState:User}) => {
+    // const [userState, setUserState] = useState<User>()
 
-        const user = auth.currentUser
+    // useEffect(() => {
 
-        if(user) {
+    //     const user = auth.currentUser
 
-        const userInput: User = {
-            display_name: user.displayName ? user.displayName : 'User',
-            email: user.email ? user.email : 'email',
-            profile_url: user.photoURL ? user.photoURL : '',
-            uid: user.uid,
-            created_at: new Date()
-        }
+    //     if(user) {
 
-        setUserState(userInput)
-        }
-    }, [])
+    //     const userInput: User = {
+    //         display_name: user.displayName ? user.displayName : 'User',
+    //         email: user.email ? user.email : 'email',
+    //         profile_url: user.photoURL ? user.photoURL : '',
+    //         uid: user.uid,
+    //         created_at: new Date()
+    //     }
+
+    //     setUserState(userInput)
+    //     }
+    // }, [])
   return (
     <nav className="max-w-[200px] text-white py-2 pl-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
         <div className="flex gap-4 items-center justify-between">
