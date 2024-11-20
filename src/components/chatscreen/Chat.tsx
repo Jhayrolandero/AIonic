@@ -47,8 +47,8 @@ const Chat = () => {
   }, [])
 
   return (
-    <div className="grid grid-rows-[1fr_auto] h-full w-full overflow-hidden overflow-y-auto max-h-screen  relative">
-      <div className="px-4 py-2 space-y-4">
+    <div className=" px-20 grid grid-rows-[1fr_auto] h-full w-full overflow-hidden overflow-y-auto max-h-screen  relative">
+      <div className=" py-2 space-y-4">
         {
           posts.map((x, i) => (
             <MessageBox 
@@ -62,7 +62,7 @@ const Chat = () => {
         }
         { suspendBtn && <LoadThinking /> }
       </div>
-      <div className="px-4 py-2 sticky bottom-0">
+      <div className="py-2 sticky bottom-0">
           <div className="border-[1px] border-gray-400 bg-[#2A2E30] flex justify-between items-center px-4 rounded-lg">
             <textarea  
             placeholder="Enter something"

@@ -6,7 +6,7 @@ import { HfInference } from "@huggingface/inference";
 const client = new HfInference("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")
 
 export const fetchMessage = async (userID: string, chatID: string) => {
-    let messages: any = []
+    let messages: Message[] = []
     const messageRef = collection(db, `users/${userID}/chats/${chatID}/messages`) 
 
     const queryRef = query(messageRef, orderBy('created_date', 'asc'))
@@ -17,10 +17,11 @@ export const fetchMessage = async (userID: string, chatID: string) => {
 
         const chatData = doc.data()
 
-        const currPost = {
+        const currPost: Message = {
         entity: chatData.entity,
         message: chatData.message.replace(/\\n/g, '\n'),
         newMessage: false,
+        created_date: chatData.created_date
         };
 
         messages = [...messages, currPost]
@@ -62,7 +63,7 @@ export const sendMessage = async ( messageInput: Message, userID: string, chatID
         }  
     }
   
-    const postMessage = {
+    let postMessage = {
         entity: 'bot',
         message: dbPost,
         newMessage: true,
@@ -75,5 +76,9 @@ export const sendMessage = async ( messageInput: Message, userID: string, chatID
         console.error("Error adding document: ", e);
     }
   
+    postMessage = {
+        ...postMessage, 
+        message: postMessage.message.replace(/\\n/g, '\n\n')
+    }
     return [messageInput , postMessage]
 }

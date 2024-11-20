@@ -5,16 +5,12 @@ import Typewriter from '../Typewriter'
 import Code from '../Code'
 import { Message } from '../../interface/iMessage'
 
-interface MessageProps {
-    message: string;
-    entity: 'user' | 'bot';
-    newMessage: boolean;
-}
+// TODO: Add user Auth & Chat history
 
 const MessageBox: React.FC<Message> = ({message, newMessage, entity, created_date}) => {
   
   const Pre = ({children} : {children:string}) => (
-    <pre className="bg-[#2F2F2F] w-full border-[1px] border-gray-400">
+    <pre className="bg-[#2F2F2F]  border-[1px] border-gray-400">
       {children}
     </pre>
   )
@@ -24,6 +20,12 @@ const MessageBox: React.FC<Message> = ({message, newMessage, entity, created_dat
       {children}
     </h3>
   ) 
+
+  const Strong = ({children} : {children:string}) => (
+    <strong className='font-bold text-white'>
+      {children}
+    </strong>
+  )
   
   
   return (
@@ -32,7 +34,7 @@ const MessageBox: React.FC<Message> = ({message, newMessage, entity, created_dat
       <IoLogoIonic  className="size-6"/>
     </span>
     <Markdown
-    className={`${entity === 'user' ? 'order-1' : 'order-2'} px-4 py-2 rounded-md bg-[#141718] prose text-white text-[12px]`}
+    className={`${entity === 'user' ? 'order-1' : 'order-2'} px-4 py-2 rounded-md bg-[#141718] prose text-white text-[14px] max-w-`}
     options={{
       overrides: {
         code: {
@@ -43,6 +45,9 @@ const MessageBox: React.FC<Message> = ({message, newMessage, entity, created_dat
         },
         h3: {
           component: H3
+        },
+        strong: {
+          component: Strong
         }
       }
     }}

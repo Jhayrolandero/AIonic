@@ -1,10 +1,33 @@
 import { FiSidebar } from "react-icons/fi";
-import { IconContext } from "react-icons";
 import { IoLogoIonic } from "react-icons/io5";
 import { MdOutlineChat } from "react-icons/md";
-import { CiLogout } from "react-icons/ci";
-
+import { useNavigate } from "react-router-dom";
+import { signUserOut } from "../../services/AuthService";
+import AccountMenu from "../ui/AccountMenu";
+import { useEffect, useState } from "react";
+import { auth } from "../../config/firebaseConfig";
+import { User } from "../../interface/iUser";
 const Sidebar = () => {
+    const navigate = useNavigate()
+    const [userState, setUserState] = useState<User>()
+
+    useEffect(() => {
+
+        const user = auth.currentUser
+
+        if(user) {
+
+        const userInput: User = {
+            display_name: user.displayName ? user.displayName : 'User',
+            email: user.email ? user.email : 'email',
+            profile_url: user.photoURL ? user.photoURL : '',
+            uid: user.uid,
+            created_at: new Date()
+        }
+
+        setUserState(userInput)
+        }
+    }, [])
   return (
     <nav className="max-w-[200px] text-white py-2 pl-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
         <div className="flex gap-4 items-center justify-between">
@@ -34,12 +57,28 @@ const Sidebar = () => {
                 <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
             </div>    
         </div>
-        <button className="flex">
-        <IconContext.Provider value={{ color: "red", className: "size-7" }}>
-            <CiLogout />
-        </IconContext.Provider>                
-            Logout
-        </button>
+        {/* // onClick={() => {signUserOut(); navigate("/login")}} */}
+            {
+                userState 
+                ?              
+                <div className="flex gap-1 items-center">
+                    <AccountMenu 
+                    display_name={userState.display_name} 
+                    email={userState.email} 
+                    profile_url={userState.profile_url} 
+                    uid={userState.uid} 
+                    created_at={userState.created_at}/>
+                    <p className="text-[12px]">{userState.display_name}</p>
+                </div>
+                :
+                <p>Loading...</p>
+
+
+            }
+            {/* <CiLogout /> */}
+        {/* <IconContext.Provider value={{ color: "red", className: "size-7" }}>
+        </IconContext.Provider>                 */}
+            {/* Logout */}
     </nav>
   )
 }
