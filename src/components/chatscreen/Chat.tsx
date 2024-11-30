@@ -1,13 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { Message } from "../../interface/iMessage";
 import { fetchMessage, sendMessage } from "../../services/MessageService";
 import LoadThinking from "../LoadThinking";
 import MessageBox from "../message/MessageBox";
+import { UserContext } from "../Layout";
 
 
 // TODO: fetch the chat history by user
-const Chat = ({userID} : {userID: string}) => {
+// const Chat = ({userID} : {userID: string}) => {
+const Chat = () => {
+  const user = useContext(UserContext);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [posts, setPosts] = useState<Message[]>([]);
@@ -35,7 +38,7 @@ const Chat = ({userID} : {userID: string}) => {
 
     setPosts(prevPosts => [...prevPosts, currInput]);
 
-    const [inputReturn, messageReturn] = await sendMessage(currInput, '4b2zuXthmMk2ZtoZ1M8V', 'QL8hYHDh93DblUKz2034')
+    const [inputReturn, messageReturn] = await sendMessage(currInput, user.userState!.uid, user.chatID!)
     
     setPosts(prevPosts => [...prevPosts, messageReturn]);
     
@@ -43,7 +46,7 @@ const Chat = ({userID} : {userID: string}) => {
   }
 
   const fetchData = async () => {
-    const messages = await fetchMessage('4b2zuXthmMk2ZtoZ1M8V', 'QL8hYHDh93DblUKz2034')
+    const messages = await fetchMessage(user.userState!.uid, user.chatID!)
     setPosts(messages)
   }
 

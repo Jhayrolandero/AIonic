@@ -1,14 +1,14 @@
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../config/firebaseConfig";
-import { User } from "../../interface/iUser";
-import Chat from "./Chat";
-import { useEffect, useState } from "react";
-import WelcomeChat from "./WelcomeChat";
+import { useContext, useEffect, useState } from "react";
 import { IoLogoIonic } from "react-icons/io5";
+import { db } from "../../config/firebaseConfig";
+import { UserContext } from "../Layout";
+import Chat from "./Chat";
+import WelcomeChat from "./WelcomeChat";
 
-const ChatScreen = ({userState} : {userState: User}) => {
-
-  const [newChat, setNewChat] = useState(false)
+// const ChatScreen = ({userState} : {userState: User}) => {
+const ChatScreen = () => {
+  const user = useContext(UserContext);
   const [chatLoading, setChatLoading] = useState(false)
 
   const fetchChat = async () => {
@@ -16,12 +16,12 @@ const ChatScreen = ({userState} : {userState: User}) => {
 
       setChatLoading(true)
       // Get the snapshot of the subcollection
-      const querySnapshot = await getDocs(collection(db, "users", userState.uid, "chats"));
+      const querySnapshot = await getDocs(collection(db, "users", user.userState!.uid, "chats"));
       
       // Check if the subcollection contains documents
       if (querySnapshot.empty) {
         setChatLoading(false)
-        setNewChat(true)
+        // setNewChat(true)
         console.log("The 'chats' subcollection does not exist or is empty.");
       } else {
         console.log("The 'chats' subcollection exists and has documents.");
@@ -52,12 +52,12 @@ const ChatScreen = ({userState} : {userState: User}) => {
           className=" animate-spin size-5"/>
         </div>
         :
-        newChat
+        user.newChat
         ?
         <WelcomeChat />
         :
         <Chat 
-        userID={userState.uid}
+        // userID={user.userState!.uid}
         />
       }
         {/* <HistoryBar /> */}

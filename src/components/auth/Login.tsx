@@ -68,7 +68,7 @@ const Login = () => {
 
     useEffect(() => {
       if(auth.currentUser) {
-        navigate("/");
+        navigate("/c");
       }
     }, [])
   return (

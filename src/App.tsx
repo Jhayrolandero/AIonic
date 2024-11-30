@@ -1,31 +1,27 @@
+import { onAuthStateChanged } from "firebase/auth"
 import { useEffect } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import Layout from "./components/Layout"
 import { auth } from "./config/firebaseConfig"
-import { useNavigate } from "react-router-dom"
-import { onAuthStateChanged } from "firebase/auth"
 const App = () => {
 
   const navigate = useNavigate()
+  let { chatID } = useParams()
 
-  // FIXME: Fetching user authstate have delay so make it asynch
   useEffect(() => {
 
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('Auth')
-      } else {
+      if (!user) {
         navigate("/login")
       }
     });
-    if(auth.currentUser == null) {
-      console.log("User null")
-    }
+
   }, [])
 
   return (
-    <div className=" font-lato text-white">
-    <Layout />
-    </div>
+      <div className=" font-lato text-white">
+      <Layout chatid={chatID}/>
+      </div>
   )
 }
 

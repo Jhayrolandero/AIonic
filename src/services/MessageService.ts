@@ -5,6 +5,12 @@ import { HfInference } from "@huggingface/inference";
 
 const client = new HfInference("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")
 
+/**
+ * 
+ * @param userID Current logged in User ID
+ * @param chatID Chat ID
+ * @returns 
+ */
 export const fetchMessage = async (userID: string, chatID: string) => {
     let messages: Message[] = []
     const messageRef = collection(db, `users/${userID}/chats/${chatID}/messages`) 
