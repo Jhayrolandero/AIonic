@@ -99,5 +99,5 @@ export const sendNewMesage = async (messageInput: Message, userID: string, title
     // const messageRef = collection(db, `users/${userID}/chats/${chatDocID}/messages`)
 
     return [chatDocID, messageIn, postMessage]
-
 }
+

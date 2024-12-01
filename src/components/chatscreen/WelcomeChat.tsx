@@ -12,11 +12,11 @@ const WelcomeChat = () => {
   const [isSuspendBtn, setSuspendBtn] = useState(false)
   const [chatTouched, setChatTouched] = useState(false)
   const inputChatRef = useRef<HTMLInputElement>(null)
-  const user = useContext(UserContext)
+  const { userState, setUser } = useContext(UserContext)
   const { messages, setMessages } = useContext(MessagesContext);
+  const [ chatId, setChatId ] = useState('')
 
   const handleInput = async () => {
-    debugger
     setSuspendBtn(true)
     
     if(inputChatRef.current?.value == null) {
@@ -35,7 +35,7 @@ const WelcomeChat = () => {
 
     setMessages((prevMessages:Message[]) => [...prevMessages, currInput]);
     
-    const [newChatId, inputReturn, messageReturn] = await sendNewMesage(currInput, user.userState!.uid, "Test Title")
+    const [newChatId, inputReturn, messageReturn] = await sendNewMesage(currInput, userState.userState!.uid, "Test Title")
     
     window.history.replaceState(null, "New Page Title", `/c/${newChatId}`)
     
@@ -45,7 +45,7 @@ const WelcomeChat = () => {
     // const [inputReturn, messageReturn] = await sendMessage(currInput, user.userState!.uid, user.chatID!)
     
     // setPosts(prevPosts => [...prevPosts, messageReturn]);
-    
+    setChatId(newChatId as string)
     setChatTouched(true)
     setSuspendBtn(false)
   }
@@ -57,7 +57,7 @@ const WelcomeChat = () => {
       <p className="text-center text-[1.5rem] font-semibold">
         {
         Typewriter({
-          text: "Hello, how can i assist you toasdsadasdday?",
+          text: "Hello, how can i assist you today?",
           delay: 50
           })
         }
@@ -81,7 +81,7 @@ const WelcomeChat = () => {
       </button>
       </form>
     </div>
-    {chatTouched && <Chat />}
+    {chatTouched && <Chat chatid={chatId} />}
     </>
   )
 }

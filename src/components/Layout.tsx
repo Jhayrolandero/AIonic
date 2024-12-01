@@ -7,18 +7,14 @@ import { onAuthStateChanged } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import { IoLogoIonic } from "react-icons/io5"
 
-interface UserChatState {
+export interface UserChatState {
   userState: User | null
   chatID?: string
   newChat: boolean | null
   isLoading: boolean
 }
 
-export const UserContext = createContext<UserChatState>({
-  userState: null,
-  newChat: null,
-  isLoading: true
-})
+export const UserContext = createContext<any>()
 
 const Layout = ({ chatid } : { chatid?: string }) => {
   // const [userState, setUserState] = useState<User>()
@@ -70,7 +66,7 @@ const Layout = ({ chatid } : { chatid?: string }) => {
   },[])
   
   return (
-    <UserContext.Provider value={userState}>
+    <UserContext.Provider value={{userState, setUserState}}>
       <div className="grid grid-cols-[auto_1fr] bg-[#141618] min-h-screen gap-4">
         {
           userState.isLoading 

@@ -10,10 +10,10 @@ import { collection, getDocs } from "firebase/firestore";
 // TODO: fix the account logic
 // const Sidebar = ({userState} : {userState:User}) => {
 const Sidebar = () => {
-    const user = useContext(UserContext);
+    const {userState, setUserState} = useContext(UserContext);
 
     const fetchChats = async () => {
-        const q = collection(db, `users/${user.userState!.uid}/chats`)
+        const q = collection(db, `users/${userState.userState!.uid}/chats`)
 
         const chatSnapshot = await getDocs(q)
 
@@ -58,18 +58,18 @@ const Sidebar = () => {
             </div>
             {/* // onClick={() => {signUserOut(); navigate("/login")}} */}
                 {
-                    user.isLoading 
+                    userState.isLoading 
                     ?              
                     <p>Loading...</p>
                     :
                     <div className="flex gap-1 items-center">
                         <AccountMenu 
-                        display_name={user.userState!.display_name} 
-                        email={user.userState!.email} 
-                        profile_url={user.userState!.profile_url} 
-                        uid={user.userState!.uid} 
-                        created_at={user.userState!.created_at}/>
-                        <p className="text-[12px]">{user.userState!.display_name}</p>
+                        display_name={userState.userState!.display_name} 
+                        email={userState.userState!.email} 
+                        profile_url={userState.userState!.profile_url} 
+                        uid={userState.userState!.uid} 
+                        created_at={userState.userState!.created_at}/>
+                        <p className="text-[12px]">{userState.userState!.display_name}</p>
                     </div>
 
 

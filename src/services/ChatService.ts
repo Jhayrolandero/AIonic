@@ -1,4 +1,4 @@
-import { addDoc, collection } from "firebase/firestore"
+import { addDoc, collection, doc, getDoc } from "firebase/firestore"
 import { db } from "../config/firebaseConfig"
 
 export const createNewChat = async (userID: string, title: string) => {
@@ -12,4 +12,12 @@ export const createNewChat = async (userID: string, title: string) => {
     })
 
     return chatDoc.id
+}
+
+export const isChatExists = async(userID: string, chatID: string) => {
+    const docRef = doc(db, `users/${userID}/chats`, chatID);
+
+    const docSnap = await getDoc(docRef);
+
+    return docSnap.exists() 
 }
