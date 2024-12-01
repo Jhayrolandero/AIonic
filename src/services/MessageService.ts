@@ -2,6 +2,7 @@ import { addDoc, collection, getDocs, orderBy, query } from "firebase/firestore"
 import { db } from "../config/firebaseConfig";
 import { Message } from "../interface/iMessage";
 import { HfInference } from "@huggingface/inference";
+import { createNewChat } from "./ChatService";
 
 const client = new HfInference("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")
 
@@ -23,6 +24,7 @@ export const fetchMessage = async (userID: string, chatID: string) => {
 
         const chatData = doc.data()
 
+        console.log(chatData)
         const currPost: Message = {
         entity: chatData.entity,
         message: chatData.message.replace(/\\n/g, '\n'),
@@ -87,4 +89,15 @@ export const sendMessage = async ( messageInput: Message, userID: string, chatID
         message: postMessage.message.replace(/\\n/g, '\n\n')
     }
     return [messageInput , postMessage]
+}
+
+export const sendNewMesage = async (messageInput: Message, userID: string, title: string) => {
+    // const chatRef = collection(db, `users/${userID}/chats`)
+    const chatDocID = await createNewChat(userID, title)
+
+    const [messageIn, postMessage] = await sendMessage(messageInput, userID, chatDocID)
+    // const messageRef = collection(db, `users/${userID}/chats/${chatDocID}/messages`)
+
+    return [chatDocID, messageIn, postMessage]
+
 }

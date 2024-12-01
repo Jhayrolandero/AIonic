@@ -5,6 +5,7 @@ import { fetchMessage, sendMessage } from "../../services/MessageService";
 import LoadThinking from "../LoadThinking";
 import MessageBox from "../message/MessageBox";
 import { UserContext } from "../Layout";
+import { MessagesContext } from "./ChatScreen";
 
 
 // TODO: fetch the chat history by user
@@ -13,7 +14,9 @@ const Chat = () => {
   const user = useContext(UserContext);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
-  const [posts, setPosts] = useState<Message[]>([]);
+  // const [posts, setPosts] = useState<Message[]>([]);
+  const { messages, setMessages } = useContext(MessagesContext);
+
   // const [userIDState, setUserID] = useState('')
   // const [chatID, setChatID] = useState('')
 
@@ -36,29 +39,31 @@ const Chat = () => {
       created_date: new Date()
     }
 
-    setPosts(prevPosts => [...prevPosts, currInput]);
+    setMessages((prevMessages:Message[]) => [...prevMessages, currInput]);
 
     const [inputReturn, messageReturn] = await sendMessage(currInput, user.userState!.uid, user.chatID!)
     
-    setPosts(prevPosts => [...prevPosts, messageReturn]);
+    setMessages((prevMessages:Message[]) => [...prevMessages, messageReturn]);
     
     setSuspendBtn(false)
   }
 
   const fetchData = async () => {
     const messages = await fetchMessage(user.userState!.uid, user.chatID!)
-    setPosts(messages)
+    setMessages(messages)
   }
 
   useEffect(() => {
-    fetchData()
+    if(!user.newChat) {
+      fetchData()
+    }
   }, [])
 
   return (
     <div className=" px-20 grid grid-rows-[1fr_auto] h-full w-full overflow-hidden overflow-y-auto max-h-screen  relative">
       <div className=" py-2 space-y-4">
         {
-          posts.map((x, i) => (
+          messages.map((x:any, i:any) => (
             <MessageBox 
             message={x.message}
             entity={x.entity}
