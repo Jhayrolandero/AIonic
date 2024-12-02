@@ -4,37 +4,42 @@ import { IoLogoIonic } from "react-icons/io5";
 import { MdOutlineChat } from "react-icons/md";
 import { UserContext } from "../Layout";
 import AccountMenu from "../ui/AccountMenu";
-import { db } from "../../config/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
-
-// TODO: fix the account logic
-// const Sidebar = ({userState} : {userState:User}) => {
+import { fetchChats } from "../../services/ChatService";
+import { ChatHistory } from "../../interface/iChat";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Sidebar = () => {
     const {userState, setUserState} = useContext(UserContext);
 
-    const fetchChats = async () => {
-        const q = collection(db, `users/${userState.userState!.uid}/chats`)
+    const navigate = useNavigate()
 
-        const chatSnapshot = await getDocs(q)
+    const [ chatHistory, setChatHistory ] = useState<ChatHistory[]>([])
 
-        console.log(chatSnapshot.docs)
-        chatSnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
-        });
-          
+    const [ historyLoading, setHistoryLoading ] = useState(true)
+
+    const init = async () => {
+        const historyRes = await fetchChats(userState.userState.uid)
+
+        setChatHistory(historyRes)
+
+        setHistoryLoading(false)
     }
+
+    const navigateChat = (chatid:string) => {
+        navigate(`/c/${chatid}`)
+    }
+
     useEffect(() => {
-        // fetchChats()
+        init()
     }, [])
     return (
-        <nav className="max-w-[200px] text-white py-2 pl-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
+        <nav className="w-[280px] text-white py-2 pl-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
             <div className="flex gap-4 items-center justify-between">
             <div className="flex gap-2 items-center">
                     <IoLogoIonic 
                     className="text-[#0080ff] size-8"
                     />
-                <h4 className="font-bold">AIonic</h4>
+                <h4 className="font-bold text-[1.05rem]">AIonic</h4>
             </div>
                 <button><FiSidebar className="text-white size-5"/></button>
             </div>
@@ -43,9 +48,26 @@ const Sidebar = () => {
                     <span>
                         <MdOutlineChat className="size-6 text-white"/>
                     </span>
-                    <p className="text-[0.8rem]">Chats</p>
+                    <p className="text-[0.9rem]">Chats</p>
                 </div>
-                <div className="space-y-2">
+                
+                {/* TODO: Make it so that it will navigate to the chat id */}
+                {
+                    historyLoading
+                    ?
+                    <p>Fetching History</p>
+                    :
+                    <div className="flex flex-col gap-2">
+                        {chatHistory.map((x ,idx) => (
+                            <button
+                            className="text-[1rem] text-start"
+                            key={idx}
+                            onClick={() => navigateChat(x.chat_id)}
+                            >{x.chat_title}</button>
+                        ))}
+                    </div>
+                }
+                {/* <div className="space-y-2">
                     <p className="text-[0.7rem]">Yesterday</p>
                     <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
                     <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
@@ -54,7 +76,7 @@ const Sidebar = () => {
                     <p className="text-[0.7rem]">Last 30 days</p>
                     <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
                     <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
-                </div>    
+                </div>     */}
             </div>
             {/* // onClick={() => {signUserOut(); navigate("/login")}} */}
                 {
@@ -74,10 +96,6 @@ const Sidebar = () => {
 
 
                 }
-                {/* <CiLogout /> */}
-            {/* <IconContext.Provider value={{ color: "red", className: "size-7" }}>
-            </IconContext.Provider>                 */}
-                {/* Logout */}
         </nav>
   )
 }

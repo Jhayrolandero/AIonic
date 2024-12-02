@@ -3,6 +3,7 @@ import { db } from "../config/firebaseConfig";
 import { Message } from "../interface/iMessage";
 import { HfInference } from "@huggingface/inference";
 import { createNewChat } from "./ChatService";
+import { ChatMemory } from "../components/chatscreen/ChatScreen";
 
 const client = new HfInference("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")
 
@@ -38,25 +39,43 @@ export const fetchMessage = async (userID: string, chatID: string) => {
     return messages
 }
 
+export const fetchMemory = async (userID: string, chatID: string) => {
+    let memory: ChatMemory[] = []
+    const messageRef = collection(db, `users/${userID}/chats/${chatID}/messages`) 
 
-export const sendMessage = async ( messageInput: Message, userID: string, chatID: string ) => {
+    const queryRef = query(messageRef, orderBy('created_date', 'asc'))
+    
+    const querySnapshot = await getDocs(queryRef);
+
+    querySnapshot.forEach((doc) => {
+
+        const chatData = doc.data()
+
+        // console.log(chatData)
+        const currPost: ChatMemory = {
+        role: chatData.entity === 'bot' ? 'assistant' :  chatData.entity,
+        content: chatData.message.replace(/\\n/g, '\n'),
+        };
+
+        memory = [...memory, currPost]
+    });
+
+    return memory
+}
+
+
+export const sendMessage = async ( messageInput: Message, userID: string, chatID: string, chatMemory: ChatMemory[] ) => {
     const messageRef = collection(db, `users/${userID}/chats/${chatID}/messages`)
 
     try {
-        const docRef = await addDoc(messageRef, messageInput);
-        console.log(docRef)
+        await addDoc(messageRef, messageInput);
     } catch (e) {
         console.error("Error adding document: ", e);
     }
   
     const stream = client.chatCompletionStream({
         model: "Qwen/Qwen2.5-Coder-32B-Instruct",
-        messages: [
-          {
-            role: "user",
-            content: messageInput.message
-          }
-        ],
+        messages: chatMemory,
         max_tokens: 500
     });
 
@@ -91,11 +110,11 @@ export const sendMessage = async ( messageInput: Message, userID: string, chatID
     return [messageInput , postMessage]
 }
 
-export const sendNewMesage = async (messageInput: Message, userID: string, title: string) => {
+export const sendNewMesage = async (messageInput: Message, userID: string, title: string, memory: ChatMemory[]) => {
     // const chatRef = collection(db, `users/${userID}/chats`)
     const chatDocID = await createNewChat(userID, title)
 
-    const [messageIn, postMessage] = await sendMessage(messageInput, userID, chatDocID)
+    const [messageIn, postMessage] = await sendMessage(messageInput, userID, chatDocID, memory)
     // const messageRef = collection(db, `users/${userID}/chats/${chatDocID}/messages`)
 
     return [chatDocID, messageIn, postMessage]

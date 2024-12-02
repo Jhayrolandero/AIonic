@@ -1,11 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { IoLogoIonic, IoSend } from "react-icons/io5";
 import { Message } from "../../interface/iMessage";
-import { fetchMessage, sendMessage } from "../../services/MessageService";
+import { fetchMemory, fetchMessage, sendMessage } from "../../services/MessageService";
 import LoadThinking from "../LoadThinking";
 import MessageBox from "../message/MessageBox";
 import { UserChatState, UserContext } from "../Layout";
-import { MessagesContext } from "./ChatScreen";
+import { ChatMemory, MessagesContext } from "./ChatScreen";
 import { isChatExists } from "../../services/ChatService";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +17,7 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
-  const { messages, setMessages } = useContext(MessagesContext);
+  const { messages, setMessages, memory, setMemory } = useContext(MessagesContext);
 
   const [suspendBtn, setSuspendBtn] = useState(false)
 
@@ -44,12 +44,29 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
       created_date: new Date()
     }
 
-    setMessages((prevMessages:Message[]) => [...prevMessages, currInput]);
+    const currMemory : ChatMemory = {
+      role: 'user',
+      content: textArea
+    }
 
-    const [inputReturn, messageReturn] = await sendMessage(currInput, userState.userState!.uid, userState.chatID ? userState.chatID : chatid!)
+    const updatedMessage = [...messages, currInput]
+    const updatedMemory = [...memory, currMemory]
+
+    // console.log(updatedMemory)
+    setMessages(updatedMessage);
+    setMemory(updatedMemory)
+    // setMessages((prevMessages:Message[]) => [...prevMessages, currInput]);
+
+    // setMemory((prevMemory: ChatMemory[]) => [...prevMemory, currMemory])
+
+    const [inputReturn, messageReturn] = await sendMessage(currInput, userState.userState!.uid, userState.chatID ? userState.chatID : chatid!, updatedMemory)
     
     setMessages((prevMessages:Message[]) => [...prevMessages, messageReturn]);
     
+    const botReply = messageReturn as Message
+
+    setMemory((prevMemory: ChatMemory[]) => [...prevMemory, {role: 'assistant', content: botReply.message}])
+
     setSuspendBtn(false)
   }
 
@@ -66,7 +83,10 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
       navigate('/')
     } else {
       const messages = await fetchMessage(userState.userState.uid, userState.chatID)
+      const memory = await fetchMemory(userState.userState.uid, userState.chatID)
+
       setMessages(messages)
+      setMemory(memory)
       setChatLoading(false)
     }
   }
