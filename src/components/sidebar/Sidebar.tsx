@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { FiSidebar } from "react-icons/fi";
 import { IoLogoIonic } from "react-icons/io5";
 import { MdOutlineChat } from "react-icons/md";
-import { UserContext } from "../Layout";
+import { CloseSidenav, UserContext } from "../Layout";
 import AccountMenu from "../ui/AccountMenu";
 import { fetchChats } from "../../services/ChatService";
 import { ChatHistory } from "../../interface/iChat";
@@ -15,6 +15,8 @@ const Sidebar = () => {
     const {userState, setUserState} = useContext(UserContext);
 
     const {newTitleChat, setNewTitleChat} = useContext(ChatSideContext)
+
+    const {isClose, setIsClose} = useContext(CloseSidenav)
 
     const navigate = useNavigate()
 
@@ -67,8 +69,18 @@ const Sidebar = () => {
             addNewChatTitle()
         }
     }, [newTitleChat])
+
+    if(isClose) {
+        return (
+            <nav className="flex flex-col items-center p-1">
+                <button onClick={() => setIsClose(false)}>
+                <IoLogoIonic className="text-[#0080ff] size-8"/>
+                </button>
+            </nav>
+        )
+    } else {
     return (
-        <nav className="w-[180px] lg:w-[240px] text-white py-2 pl-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
+        <nav className="w-[180px] lg:w-[240px] overflow-x-hidden text-white py-2 px-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
             <div className="flex gap-4 items-center justify-between">
             <div className="flex gap-2 items-center">
                     <IoLogoIonic 
@@ -76,8 +88,8 @@ const Sidebar = () => {
                     />
                 <h4 className="font-bold text-[1.05rem]">AIonic</h4>
             </div>
-                    <button><FiSidebar className="text-white size-5"/></button>
-            </div>
+                    <button onClick={() => setIsClose(true)}><FiSidebar className="text-white size-5"/></button>
+            </div> 
             <div className="flex flex-col gap-4">
                 <div className="flex  justify-between gap-2 border-b-2 border-white py-1">
                     <div className="flex gap-2">
@@ -99,11 +111,14 @@ const Sidebar = () => {
                     :
                     <div className="flex flex-col gap-2">
                         {chatHistory.map((x ,idx) => (
-                            <button
-                            className="text-[1rem] text-start px-3 py-1 rounded-md transition-all hover:scale-105"
-                            key={idx}
-                            onClick={() => navigateChat(x.chat_id)}
-                            >{x.chat_title}</button>
+                           <button
+                           className="text-[1rem] text-start px-3 py-1 rounded-md transition-all hover:scale-105  overflow-hidden w-full"
+                           key={idx}
+                           onClick={() => navigateChat(x.chat_id)}
+                         >
+                           <p className="">{x.chat_title}</p>
+                         </button>
+                         
                         ))}
                     </div>
                 }
@@ -126,7 +141,8 @@ const Sidebar = () => {
 
                 }
         </nav>
-  )
+    )
+}
 }
 
 export default Sidebar

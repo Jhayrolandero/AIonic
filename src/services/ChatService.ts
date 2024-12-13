@@ -26,7 +26,7 @@ export const isChatExists = async(userID: string, chatID: string) => {
 export const fetchChats = async(userID: string) => {
     const chatRef = collection(db, `users/${userID}/chats`)
 
-    const q = query(chatRef, orderBy('created_at', 'asc'), limit(5))
+    const q = query(chatRef, orderBy('created_at', 'asc'), limit(20))
 
     const res = await getDocs(q)
 

@@ -75,26 +75,24 @@ const Login = () => {
     <div className='bg-[#141618] min-h-screen grid grid-rows-[auto_1fr] text-white font-lato'>
         <header className='flex justify-between px-5 py-3'>
             <h4>AIonic</h4>
-        <button
+        {/* <button
         onClick={handleLogin}
         className='border-[1px] border-white rounded-md'
-        >Login</button>
+        >Login</button> */}
         </header>
         <div className='flex justify-center items-center flex-col gap-3'>
           <Spotlight />
         <SiIonic className='text-[#0080FF] size-20 animate-spin'/>
         <div className='flex flex-col justify-center items-center'>
-          <p className=' text-[2rem] font-bold'>Build something...</p>
-          <p className=' text-[2rem] font-bold'>Build something part 2...</p>
-          <p className=' text-[2rem] font-bold'>Build something...</p>
+          <p className='text-[2rem] font-bold'>Prompting is the only limit</p>
         </div>
         <button 
         className='border-[1px] border-gray-300 px-4 py-3 rounded-md'
         onClick={handleLogin}
         >
-          Join now
+          Try now
         </button>
-          <button
+          {/* <button
           onClick={handleCheck}
           >
             Check
@@ -103,7 +101,7 @@ const Login = () => {
           onClick={handleLogout}
           >
             Logout
-          </button>
+          </button> */}
         </div>
     </div>
   )

@@ -16,6 +16,7 @@ export interface UserChatState {
 
 export const UserContext = createContext<any>()
 export const ChatSideContext = createContext<any>()
+export const CloseSidenav = createContext<any>()
 
 const Layout = ({ chatid } : { chatid?: string }) => {
   // const [userState, setUserState] = useState<User>()
@@ -27,6 +28,8 @@ const Layout = ({ chatid } : { chatid?: string }) => {
 
   const [newTitleChat, setNewTitleChat] = useState("")
   
+  const [ isClose, setIsClose ] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -69,9 +72,10 @@ const Layout = ({ chatid } : { chatid?: string }) => {
   },[])
   
   return (
+    <CloseSidenav.Provider value={{isClose, setIsClose}}>
     <ChatSideContext.Provider value={{newTitleChat, setNewTitleChat}}>
       <UserContext.Provider value={{userState, setUserState}}>
-        <div className="grid grid-cols-[auto_1fr] bg-[#141618] min-h-screen gap-4">
+        <div className="grid grid-cols-[auto_1fr] bg-[#141618] min-h-screen">
           {
             userState.isLoading 
             ?
@@ -89,6 +93,7 @@ const Layout = ({ chatid } : { chatid?: string }) => {
         </div>
       </UserContext.Provider>
     </ChatSideContext.Provider>
+    </CloseSidenav.Provider>
   )
 }
 
