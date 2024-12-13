@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Message } from "../../interface/iMessage";
 import { UserContext } from "../Layout";
 import Chat from "./Chat";

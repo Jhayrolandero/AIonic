@@ -34,7 +34,7 @@ const MessageBox: React.FC<Message> = ({message, newMessage, entity, created_dat
       <IoLogoIonic  className="size-6"/>
     </span>
     <Markdown
-    className={`${entity === 'user' ? 'order-1' : 'order-2'} px-4 py-2 rounded-md bg-[#141718] prose text-white text-[14px] max-w-`}
+    className={`${entity === 'user' ? 'order-1 max-w-[70%]' : 'order-2'} px-4 space-y-3 py-2 rounded-md  prose text-white text-[1rem] leading-7`}
     options={{
       overrides: {
         code: {

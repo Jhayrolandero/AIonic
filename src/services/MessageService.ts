@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, orderBy, query } from "firebase/firestore";
+import { addDoc, collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { Message } from "../interface/iMessage";
 import { HfInference } from "@huggingface/inference";
@@ -117,6 +117,6 @@ export const sendNewMesage = async (messageInput: Message, userID: string, title
     const [messageIn, postMessage] = await sendMessage(messageInput, userID, chatDocID, memory)
     // const messageRef = collection(db, `users/${userID}/chats/${chatDocID}/messages`)
 
-    return [chatDocID, messageIn, postMessage]
+    return [chatDocID, messageIn, postMessage, title]
 }
 

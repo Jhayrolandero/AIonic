@@ -27,6 +27,10 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
 
   const navigate = useNavigate()
 
+  // useEffect(() => {
+  //   fetchData()
+  // }, [userState.chatID])
+
   const handleInput = async () => {
 
     setSuspendBtn(true)
@@ -95,7 +99,7 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
     if(!userState.newChat) {
       fetchData()
     }
-  }, [])
+  }, [userState.chatID])
 
   if(chatLoading) {
     return (
@@ -110,8 +114,9 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
     )
   } else {
     return (
-      <div className=" px-20 grid grid-rows-[1fr_auto] h-full w-full overflow-hidden overflow-y-auto max-h-screen  relative">
-        <div className=" py-2 space-y-4">
+      <div className=" px-28 grid grid-rows-[1fr_auto] h-full w-full overflow-hidden overflow-y-auto max-h-screen  relative">
+        {/* {userState.chatID} */}
+        <div className=" py-2 space-y-6">
           {
             messages.map((x:any, i:any) => (
               <MessageBox 
@@ -126,7 +131,7 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
           { suspendBtn && <LoadThinking /> }
         </div>
         <div className="py-2 sticky bottom-0">
-            <div className="border-[1px] border-gray-400 bg-[#2A2E30] flex justify-between items-center px-4 rounded-lg">
+            <form className="border-[1px] border-gray-400 bg-[#2A2E30] flex justify-between items-center px-4 rounded-lg">
               <textarea  
               placeholder="Enter something"
               className="text-area w-full mr-4 p-3 max-h-[64px] h-auto overflow-y-auto resize-none scroll-m-1 bg-transparent focus:outline-none border-0 text-[0.8rem]"
@@ -139,7 +144,7 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
               >
                   <IoSend />
               </button>
-            </div>
+            </form>
         </div>
       </div>
     )

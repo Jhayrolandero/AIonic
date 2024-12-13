@@ -8,8 +8,13 @@ import { fetchChats } from "../../services/ChatService";
 import { ChatHistory } from "../../interface/iChat";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RiChatNewLine } from "react-icons/ri";
+import {ChatSideContext} from "../Layout";
+
 const Sidebar = () => {
     const {userState, setUserState} = useContext(UserContext);
+
+    const {newTitleChat, setNewTitleChat} = useContext(ChatSideContext)
 
     const navigate = useNavigate()
 
@@ -25,15 +30,45 @@ const Sidebar = () => {
         setHistoryLoading(false)
     }
 
-    const navigateChat = (chatid:string) => {
-        navigate(`/c/${chatid}`)
+    const navigateChat = (chatID:string) => {
+        const prevState = {
+            ...userState,
+            chatID,
+            newChat: false
+        }
+        
+        setUserState(prevState)
+
+        navigate(`/c/${chatID}`)
+    }
+
+    const initNewChat = () => {
+        const prevState = {
+            ...userState,
+            chatID: '',
+            newChat: true
+        }
+
+        setUserState(prevState)
+
+        navigate('/')
+    }
+
+    const addNewChatTitle = () => {
+        let prevState = [...chatHistory, newTitleChat]
+
+        setChatHistory(prevState)
     }
 
     useEffect(() => {
         init()
-    }, [])
+
+        if(newTitleChat) {
+            addNewChatTitle()
+        }
+    }, [newTitleChat])
     return (
-        <nav className="w-[280px] text-white py-2 pl-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
+        <nav className="w-[180px] lg:w-[240px] text-white py-2 pl-3 space-y-5 grid grid-rows-[auto_1fr_auto]">
             <div className="flex gap-4 items-center justify-between">
             <div className="flex gap-2 items-center">
                     <IoLogoIonic 
@@ -41,14 +76,19 @@ const Sidebar = () => {
                     />
                 <h4 className="font-bold text-[1.05rem]">AIonic</h4>
             </div>
-                <button><FiSidebar className="text-white size-5"/></button>
+                    <button><FiSidebar className="text-white size-5"/></button>
             </div>
             <div className="flex flex-col gap-4">
-                <div className="flex gap-2 border-b-2 border-white py-1">
-                    <span>
-                        <MdOutlineChat className="size-6 text-white"/>
-                    </span>
-                    <p className="text-[0.9rem]">Chats</p>
+                <div className="flex  justify-between gap-2 border-b-2 border-white py-1">
+                    <div className="flex gap-2">
+                        <span>
+                            <MdOutlineChat className="size-6 text-white"/>
+                        </span>
+                        <p className="text-[0.9rem]">Chats</p>
+                    </div>
+                    <button onClick={initNewChat}>
+                        <RiChatNewLine className="text-white size-5"/>
+                    </button>
                 </div>
                 
                 {/* TODO: Make it so that it will navigate to the chat id */}
@@ -60,25 +100,14 @@ const Sidebar = () => {
                     <div className="flex flex-col gap-2">
                         {chatHistory.map((x ,idx) => (
                             <button
-                            className="text-[1rem] text-start"
+                            className="text-[1rem] text-start px-3 py-1 rounded-md transition-all hover:scale-105"
                             key={idx}
                             onClick={() => navigateChat(x.chat_id)}
                             >{x.chat_title}</button>
                         ))}
                     </div>
                 }
-                {/* <div className="space-y-2">
-                    <p className="text-[0.7rem]">Yesterday</p>
-                    <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
-                    <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
-                </div>    
-                <div className="space-y-2">
-                    <p className="text-[0.7rem]">Last 30 days</p>
-                    <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
-                    <p className="max-w-fit overflow-hidden text-[0.8rem]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, est?</p>
-                </div>     */}
             </div>
-            {/* // onClick={() => {signUserOut(); navigate("/login")}} */}
                 {
                     userState.isLoading 
                     ?              

@@ -9,7 +9,6 @@ const App = () => {
   let { chatID } = useParams()
 
   useEffect(() => {
-    console.log("CHECKKKKKKKKKK")
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         navigate("/login")

@@ -15,6 +15,7 @@ export interface UserChatState {
 }
 
 export const UserContext = createContext<any>()
+export const ChatSideContext = createContext<any>()
 
 const Layout = ({ chatid } : { chatid?: string }) => {
   // const [userState, setUserState] = useState<User>()
@@ -23,6 +24,8 @@ const Layout = ({ chatid } : { chatid?: string }) => {
     newChat: null,
     isLoading: true  
   })
+
+  const [newTitleChat, setNewTitleChat] = useState("")
   
   const navigate = useNavigate()
 
@@ -66,28 +69,26 @@ const Layout = ({ chatid } : { chatid?: string }) => {
   },[])
   
   return (
-    <UserContext.Provider value={{userState, setUserState}}>
-      <div className="grid grid-cols-[auto_1fr] bg-[#141618] min-h-screen gap-4">
-        {
-          userState.isLoading 
-          ?
-          <div className=" col-span-full flex w-full h-full gap-2 items-center justify-center">
-            <p className=" text-[3rem] font-bold">Authenticating</p>
-            <IoLogoIonic 
-            className=" animate-spin size-10"/>
-          </div>
-          :
-          <>
-          <Sidebar 
-          // userState={userState}
-          />
-          <ChatScreen 
-          // userState={userState}
-          />        
-          </>
-        }
-      </div>
-    </UserContext.Provider>
+    <ChatSideContext.Provider value={{newTitleChat, setNewTitleChat}}>
+      <UserContext.Provider value={{userState, setUserState}}>
+        <div className="grid grid-cols-[auto_1fr] bg-[#141618] min-h-screen gap-4">
+          {
+            userState.isLoading 
+            ?
+            <div className=" col-span-full flex w-full h-full gap-2 items-center justify-center">
+              <p className=" text-[3rem] font-bold">Authenticating</p>
+              <IoLogoIonic 
+              className=" animate-spin size-10"/>
+            </div>
+            :
+            <>
+            <Sidebar/>
+            <ChatScreen/>        
+            </>
+          }
+        </div>
+      </UserContext.Provider>
+    </ChatSideContext.Provider>
   )
 }
 

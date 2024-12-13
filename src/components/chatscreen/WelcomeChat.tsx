@@ -3,7 +3,7 @@ import { IoSend } from "react-icons/io5";
 import { SiIonic } from "react-icons/si";
 import { Message } from "../../interface/iMessage";
 import { sendNewMesage } from "../../services/MessageService";
-import { UserContext } from "../Layout";
+import { ChatSideContext, UserContext } from "../Layout";
 import Typewriter from "../Typewriter";
 import Chat from "./Chat";
 import { ChatMemory, MessagesContext } from "./ChatScreen";
@@ -18,6 +18,8 @@ const WelcomeChat = () => {
   const [currInput, setCurrInput] = useState<Message>()
 
   const { userState, setUser } = useContext(UserContext)
+
+  const {newTitleChat, setNewTitleChat} = useContext(ChatSideContext)
 
   const { messages, setMessages, memory, setMemory } = useContext(MessagesContext);
 
@@ -59,13 +61,10 @@ const WelcomeChat = () => {
     setMessages(updatedMessage);
     setMemory(updatedMemory)
 
-
-    // setMessages((prevMessages:Message[]) => [...prevMessages, currInput]);
-
-    // setMemory((prevMemory: ChatMemory[]) => [...prevMemory, currMemory])
+    const [newChatId, inputReturn, messageReturn, newTitle] = await sendNewMesage(currInput, userState.userState!.uid, handleTitle(currInput.message), updatedMemory)
     
-    const [newChatId, inputReturn, messageReturn] = await sendNewMesage(currInput, userState.userState!.uid, "Test Title", updatedMemory)
-    
+    setNewTitleChat(newTitle)
+
     window.history.replaceState(null, "New Page Title", `/c/${newChatId}`)
     
     setMessages((prevMessages:Message[]) => [...prevMessages, messageReturn]);
@@ -80,6 +79,9 @@ const WelcomeChat = () => {
     setSuspendBtn(false)
   }
 
+  const handleTitle = (title: string) => {
+    return title.substring(0, 100)
+  }
   // useEffect(() => {
   //   const [newChatId, inputReturn, messageReturn] = await sendNewMesage(currInput, userState.userState!.uid, "Test Title", memory)
 
