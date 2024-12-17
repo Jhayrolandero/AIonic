@@ -10,6 +10,14 @@ interface CodeProps {
   
 const Code: React.FC<CodeProps>  = ({children, className}) => {
     const language = className ? className.replace('lang-', '') : '';
+
+    if(language === '') {
+      return (
+        <strong className=''>
+        {String(children).replace(/\n$/, '')}
+        </strong>
+      )
+    } else {
     return (
       <div className="relative w-full">
         <button 
@@ -29,5 +37,6 @@ const Code: React.FC<CodeProps>  = ({children, className}) => {
       </div>
     )
   }
+}
 
 export default Code

@@ -14,7 +14,7 @@ const MessageBox: React.FC<Message> = ({message, newMessage, entity, created_dat
   const {userState, setUserState} = useContext(UserContext);
   
   const Pre = ({children} : {children:string}) => (
-    <pre className="bg-[#2F2F2F]  border-[1px] border-gray-400">
+    <pre className="bg-[#2F2F2F]  border-[1px] px-2 py-1">
       {children}
     </pre>
   )

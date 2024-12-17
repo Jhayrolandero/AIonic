@@ -74,7 +74,11 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
     setMessages(updatedMessage);
     setMemory(updatedMemory)
 
-    const [inputReturn, messageReturn] = await sendMessage(currInput, userState.userState!.uid, userState.chatID ? userState.chatID : chatid!, updatedMemory)
+    const [inputReturn, messageReturn] = await sendMessage(
+      currInput, 
+      userState.userState!.uid, 
+      userState.chatID ? userState.chatID : chatid!, 
+      updatedMemory)
     
     setMessages((prevMessages:Message[]) => [...prevMessages, messageReturn]);
     
