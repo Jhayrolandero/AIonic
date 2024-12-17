@@ -9,9 +9,13 @@ import { ChatMemory, MessagesContext } from "./ChatScreen";
 import { isChatExists } from "../../services/ChatService";
 import { useNavigate } from "react-router-dom";
 
+interface CacheMessageState {
+  [key: string]: {
+    messages: any[];
+    memory: any[];
+  };
+}
 
-// TODO: fetch the chat history by user
-// const Chat = ({userID} : {userID: string}) => {
 const Chat = ({ chatid }:{ chatid?: string}) => {
   const {userState, setUserState} = useContext(UserContext);
 
@@ -19,17 +23,28 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
 
   const { messages, setMessages, memory, setMemory } = useContext(MessagesContext);
 
+  const [cacheMessage, setCacheMessage] = useState<CacheMessageState>({
+    '123': { messages: [], memory: [] },
+  });
+  
   const [suspendBtn, setSuspendBtn] = useState(false)
-
-  const [isChatExist, setIsChatExist] = useState(false)
 
   const [chatLoading, setChatLoading] = useState(false)
 
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   fetchData()
-  // }, [userState.chatID])
+  const fetchCache = (chatID:string) => {
+
+    if(cacheMessage.hasOwnProperty(chatID)) {
+
+      const cacheRes = cacheMessage[chatID] 
+      setMessages(cacheRes.messages)
+      setMemory(cacheRes.memory)
+
+    } else {
+      fetchData()
+    }
+  }
 
   const handleInput = async () => {
 
@@ -56,12 +71,8 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
     const updatedMessage = [...messages, currInput]
     const updatedMemory = [...memory, currMemory]
 
-    // console.log(updatedMemory)
     setMessages(updatedMessage);
     setMemory(updatedMemory)
-    // setMessages((prevMessages:Message[]) => [...prevMessages, currInput]);
-
-    // setMemory((prevMemory: ChatMemory[]) => [...prevMemory, currMemory])
 
     const [inputReturn, messageReturn] = await sendMessage(currInput, userState.userState!.uid, userState.chatID ? userState.chatID : chatid!, updatedMemory)
     
@@ -74,10 +85,12 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
     setSuspendBtn(false)
   }
 
+  // Fetch message based on chat ID
   const fetchData = async () => {
     setChatLoading(true)
     const exist = await isChatExists(userState.userState.uid, userState.chatID ? userState.chatID : chatid ) 
 
+    // Redirect to home if doesn't exists
     if(!exist) {
       setChatLoading(false)
       setUserState((prevState: UserChatState) => ({
@@ -89,15 +102,28 @@ const Chat = ({ chatid }:{ chatid?: string}) => {
       const messages = await fetchMessage(userState.userState.uid, userState.chatID)
       const memory = await fetchMemory(userState.userState.uid, userState.chatID)
 
+      // Set new Messages
       setMessages(messages)
       setMemory(memory)
       setChatLoading(false)
+
+      // Set cache
+      const cache: CacheMessageState = {
+        [userState.chatID] : {
+          messages: messages,
+          memory: memory
+        },
+        ...cacheMessage
+      }
+      setCacheMessage(cache)
+
     }
   }
 
   useEffect(() => {
     if(!userState.newChat) {
-      fetchData()
+      // fetchData()
+      fetchCache(userState.chatID)
     }
   }, [userState.chatID])
 
